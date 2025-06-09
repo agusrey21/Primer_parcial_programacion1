@@ -60,9 +60,8 @@ def top_3(nombres, matriz):
         prom = promedio(matriz[i])
         promedios += [prom]
     indices, ordenados = burbujeo(promedios)
-    print("\n--- Top 3 Participantes ---")
-    for k in range(3):
-        print(nombres[indices[k]], "- Promedio:", ordenados[k])
+
+    return indices, ordenados
 
 def ordenar_alfabeticamente(nombres, matriz):
     for i in range(len(nombres)):

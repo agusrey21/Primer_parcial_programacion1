@@ -1,5 +1,5 @@
-import Input
-import Funciones
+import Parcial.Input as Input
+import Parcial.Funciones as Funciones
 
 nombres = ['','','','','']
 jurado1 = [0,0,0,0,0]

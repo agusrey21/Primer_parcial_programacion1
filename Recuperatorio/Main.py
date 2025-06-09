@@ -68,7 +68,10 @@ while True:
 
     elif opcion == '7':
         if matriz_puntajes:
-            Funciones.top_3(nombres, matriz_puntajes)
+            indices, valores = Funciones.top_3(nombres, matriz_puntajes)
+            print("--- Top 3 Participantes ---")
+            for k in range(3):
+                print(nombres[indices[k]], "- Promedio:", valores[k])
         else:
             print('Primero carga los puntajes.')
 
