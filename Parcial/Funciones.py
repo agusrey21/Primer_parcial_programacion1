@@ -1,131 +1,136 @@
-def promedio(lista):
-    suma = 0
-    for i in range(len(lista)):
-        suma += lista[i]
-    return suma / len(lista)
+def promedio(n1, n2, n3)->float:
+    return (n1 + n2 + n3) / 3
 
-def promedio_jurado(matriz, indice_jurado):
-    suma = 0
-    for i in range(len(matriz)):
-        suma += matriz[i][indice_jurado]
-    return suma / len(matriz)
-
-def mostrar_participantes(nombres, matriz):
-    print('--- Puntajes ---')
-    for i in range(len(nombres)):
-        print(nombres[i])
-        for j in range(len(matriz[i])):
-            print(f'Jurado N°{j+1}: {matriz[i][j]} ')
-        prom = promedio(matriz[i])
-        print(f'Promedio: {prom}')
-    return True
-
-def mostrar_menores_a(nombres, matriz, limite):
-    hay = False
+def mostrar_participantes(nombres, j1, j2, j3)-> str:
     print()
-    print("--- Participantes con promedio menor a", limite, "---")
-    for i in range(len(nombres)):
-        prom = promedio(matriz[i])
+    print('Puntajes: ')
+    for i in range(5):
+        prom = promedio(j1[i], j2[i], j3[i])
+        print(f'''      {nombres[i]}:
+        Jurado 1: {j1[i]}/10 
+        Jurado 2: {j2[i]}/10 
+        Jurado 3: {j3[i]}/10
+        Promedio: {prom}/10
+              ''')
+
+def mostrar_menores_a(nombres, j1, j2, j3, limite)->str:
+    hay_menores_a = False
+    print('')
+    for i in range(5):
+        prom = promedio(j1[i], j2[i], j3[i])
         if prom < limite:
-            print(nombres[i], 'Promedio:', prom)
-            hay = True
-    print()
-    return hay
+            print(f'{nombres[i]}, tuvo un promedio de: {prom}')
+            hay_menores_a = True
+    if hay_menores_a == False:
+        print(f'No hay participantes con promedio menor a {limite}')
 
-def buscar_nombre(nombres, matriz, nombre_buscado):
-    for i in range(len(nombres)):
+def promedio_jurado(jurado)->float:
+    total = 0
+    for i in range(5):
+        total = total + jurado[i]
+    return total / 5
+
+def buscar_nombre(nombres, j1, j2, j3, nombre_buscado)->str:
+    for i in range(5):
         if nombres[i].lower() == nombre_buscado.lower():
-            print(f"Se busco al participante: {nombres[i]}")
-            print("Sus putajes fueron los siguientes: ")
-            for j in range(len(matriz[i])):
-                print(f"Jurado N°{j+1}: {matriz[i][j]}")
-            prom = promedio(matriz[i])
-            print(f"Su promedio fue de: {prom}")
-            return True  
-    return False  
+            print(f''' El participante {nombres[i]} tiene los siguientes puntajes: 
+            Primer jurado: {j1[i]}
+            Segundo jurado: {j2[i]}
+            Tercer jurado: {j3[i]}
+            y su promedio es de: {promedio(j1[i], j2[i], j3[i])}
+            ''')
+            return
+    print('No se encontro ese participante.')
+    
+def jurado_estricto(j1,j2,j3)->str:
+    promedio_estricto = [promedio_jurado(j1), promedio_jurado(j2), promedio_jurado(j3)]
+    minimo = promedio_estricto[0]
+    
+    for i in range(3):
+        if promedio_estricto[i] < minimo:
+            minimo = promedio_estricto[i]
+    
+    print('JURADO MAS ESTRICTO: ')
+    for i in range(3):
+        if promedio_estricto[i] == minimo:
+            if i == 0:
+                print('El primer jurado es el mas estricto')
+            elif i == 1:
+                print('El segundo jurado es el mas estricto')
+            else:
+                print('el tercer jurado es el mas estricto')
 
+def jurado_generoso(j1, j2, j3)->str:
+    promedio_generoso = [promedio_jurado(j1), promedio_jurado(j2), promedio_jurado(j3)]
+    maximo = promedio_generoso[0]
+    
+    for i in range(3):
+        if promedio_generoso[i] > maximo:
+            maximo = promedio_generoso[i]
+    
+    print('JURADO MAS GENEROSO: ')
+    for i in range(3):
+        if promedio_generoso[i] == maximo:
+            if i == 0:
+                print('El primer jurado es el mas generoso')
+            elif i == 1:
+                print('El segundo jurado es el mas generoso')
+            else:
+                print('el tercer jurado es el mas generoso')
 
-def burbujeo(valores):
-    indices = list(range(len(valores)))
-    for i in range(len(valores)):
-        for j in range(i + 1, len(valores)):
-            if valores[j] > valores[i]:
-                valores[i], valores[j] = valores[j], valores[i]
-                indices[i], indices[j] = indices[j], indices[i]
-    return indices, valores
-
-def top_3(nombres, matriz):
-    promedios = []
-    for i in range(len(nombres)):
-        prom = promedio(matriz[i])
-        promedios += [prom]
-    indices, ordenados = burbujeo(promedios)
-    print("\n--- Top 3 Participantes ---")
-    for k in range(3):
-        print(nombres[indices[k]], "- Promedio:", ordenados[k])
-
-def ordenar_alfabeticamente(nombres, matriz):
-    for i in range(len(nombres)):
-        for j in range(i + 1, len(nombres)):
+def participantes_puntaje_igual(nombres, j1, j2, j3)->str:
+    encontrados = False
+    
+    for i in range(5):
+        if j1[i] == j2[i] == j3[i]:
+            print(f'{nombres[i]} tiene el mismo puntaje de los 3 jurados. {j1[i]}/10')
+            encontrados = True
+    if not encontrados:
+        print('No hay participantes con puntajes iguales de los 3 jurados.')
+        
+def top_3(nombres, j1, j2, j3)->str:
+    nombres_ordenados = ['','','','','']
+    promedios = [0,0,0,0,0]
+    
+    for i in range(5):
+        nombres_ordenados[i] = nombres[i]
+        prom = promedio(j1[i], j2[i], j3[i])
+        promedios[i] = prom
+    
+    for i in range(4):
+        for j in range(i+1, 5):
+            if promedios[j] > promedios[i]:
+                aux = promedios[i]
+                promedios[i] = promedios[j]
+                promedios[j] = aux
+                
+                aux_nombre = nombres_ordenados[i]
+                nombres_ordenados[i] = nombres_ordenados[j]
+                nombres_ordenados[j] = aux_nombre
+    
+    print(' TOP 3 PARTICIPANTES')
+    for i in range(3):
+        print(f' {nombres_ordenados[i]} - PROMEDIO = {promedios[i]}')
+    
+def ordenar_alfabeticamente(nombres, j1, j2, j3)->str:
+    for i in range(4):
+        for j in range(i+1, 5):
             if nombres[i].lower() > nombres[j].lower():
-                nombres[i], nombres[j] = nombres[j], nombres[i]
-                matriz[i], matriz[j] = matriz[j], matriz[i]
-    return nombres, matriz
-
-def jurado_mas_estricto(matriz):
-    jurados = len(matriz[0])
-    promedios = []
-    for j in range(jurados):
-        prom = promedio_jurado(matriz, j)
-        promedios += [prom]
-    minimo = promedios[0]
-    resultado = "Jurado N° 1"
-    for j in range(1, jurados):
-        if promedios[j] < minimo:
-            minimo = promedios[j]
-            resultado = "Jurado N°" + str(j+1)
-        elif promedios[j] == minimo:
-            resultado += ", Jurado N°" + str(j+1)
-    return resultado
-
-def jurado_mas_generoso(matriz):
-    jurados = len(matriz[0])
-    promedios = []
-    for j in range(jurados):
-        prom = promedio_jurado(matriz, j)
-        promedios += [prom]
-    maximo = promedios[0]
-    resultado = "Jurado N° 1"
-    for j in range(1, jurados):
-        if promedios[j] > maximo:
-            maximo = promedios[j]
-            resultado = "Jurado N°" + str(j+1)
-        elif promedios[j] == maximo:
-            resultado += ", Jurado N°" + str(j+1)
-    return resultado
-
-def participantes_con_puntajes_iguales(nombres, matriz):
-    resultados = []
-
-    for i in range(len(matriz)):
-        iguales = True
-        primero = matriz[i][0]
-        for j in range(1, len(matriz[i])):
-            if matriz[i][j] != primero:
-                iguales = False
-        if iguales:
-            resultados += [(nombres[i], primero)]
-
-    return resultados
-
-def mostrar_ganador(matriz):
-    mayor = promedio(matriz[0])
-    ganadores = [0]
-    for i in range(1, len(matriz)):
-        p = promedio(matriz[i])
-        if p > mayor:
-            mayor = p
-            ganadores = [i]
-        elif p == mayor:
-            ganadores += [i]
-    return ganadores
+                aux_nombre = nombres[i]
+                nombres[i] = nombres[j]
+                nombres[j] = aux_nombre
+                
+                aux_j1 = j1[i]
+                j1[i] = j1[j]
+                j1[j] = aux_j1
+                
+                aux_j2 = j2[i]
+                j2[i] = j2[j]
+                j2[j] = aux_j2
+                
+                aux_j3 = j3[i]
+                j3[i] = j3[j]
+                j3[j] = aux_j3
+    
+    print('Se ordenaron los Participantes de forma alfabetica:')
+    mostrar_participantes(nombres, j1, j2, j3)
